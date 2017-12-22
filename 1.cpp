@@ -118,23 +118,12 @@ void decrypt(const std::string& message, std::string& result, int& key)
     delete[] mess;
 }
 
-// Функция вызывается каждый раз, когда приходит сообщение, которое начинается со /photo
-// В ответ пользователю придет сообщение с картинкой
-void onCommandPhoto(Bot& bot, Message::Ptr message)
-{
-    bot.getApi().sendPhoto(message->chat->id, InputFile::fromFile("0.jpg", "image/jpeg"));
-}
+
 
 // Функция для демонстрации работы с командами
 // Функция вызывается каждый раз, когда приходит сообщение, которое начинается со /start
 void onCommandStart(Bot& bot, Message::Ptr message)
 {
-    /*
-    std::ifstream Introduction("C:\\example-bot\Introduction.cfg");
-    std::string helloy; 
-    Introduction >> helloy;
-    Introduction.close();
-    */
     bot.getApi().sendMessage(message->chat->id, "Hi! I'm DecryptorLeoBot!\nI can encrypt and decrypt your messages. If you want to encrypt message use command /encrypt and if you want to decrypt it use command /decrypt. To enter the key use command /key , exe.: /key 12345");
 }
 
@@ -173,8 +162,6 @@ std::map<std::string, std::function<void(Bot&, Message::Ptr)>> getAllCommands()
     {
         {"start", onCommandStart},
         {"end", onCommandEnd},
-        {"keyboard", onCommandKeyboard},
-        {"photo", onCommandPhoto},
         {"encrypt", onCommandEncrypt},
         {"decrypt", onCommandDecrypt},
         {"key", onCommandKey}
@@ -190,17 +177,9 @@ void onAnyMessage(Bot& bot, Message::Ptr message)
 
     // игнорируем сообщения, которые начинаются с /start и /end
     if (StringTools::startsWith(message->text, "/start"))
-    {
         return;
-    }
     if (StringTools::startsWith(message->text, "/end"))
-    {
         return;
-    }
-    if (StringTools::startsWith(message->text, "/photo"))
-    {
-        return;
-    }
     if (StringTools::startsWith(message->text, "/key"))
     {
         if (waitKey && waitNextMessage)
@@ -222,13 +201,9 @@ void onAnyMessage(Bot& bot, Message::Ptr message)
         return;
     }
     if (StringTools::startsWith(message->text, "/encrypt"))
-    {
         return;
-    }
     if (StringTools::startsWith(message->text, "/decrypt"))
-    {
         return;
-    }
     if (waitNextMessage)
     {
         if (modeEncryption && !waitKey)
@@ -250,21 +225,7 @@ void onAnyMessage(Bot& bot, Message::Ptr message)
             modeDecryption = false;
             waitNextMessage = false;
             return;
-        }
-       
+        } 
     }
-    // если в тексте сообщения есть "Привет" приветствуем собеседника
-    std::string hello = Utils::fromLocale("Hi");
-    std::string hello1 = Utils::fromLocale("hi");
-    std::string hello2 = Utils::fromLocale("Helloy");
-    if (message->text.find(hello) != std::string::npos ||
-        message->text.find(hello1) != std::string::npos ||
-        message->text.find(hello2) != std::string::npos)
-    {
-        bot.getApi().sendMessage(message->chat->id, Utils::fromLocale("Hi,") + message->from->firstName);
-        return;
-    }
-   // отправляем сообщение, которое получили
-   //bot.getApi().sendMessage(message->chat->id, "I can only encrypt and decrypt your messages. If you want to encrypt message use command /encrypt and if you want to decrypt it use command /decrypt. To enter the key use command /key , exe.: /key 12345");
 }
 
