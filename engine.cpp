@@ -207,19 +207,19 @@ void onAnyMessage(Bot& bot, Message::Ptr message)
     {
         if (modeEncryption && !waitKey && waitNextMessage )
         {
-			encryption(bot, message);
+	    encryption(bot, message);
             return;
         }
         else if (modeDecryption && !waitKey && waitNextMessage)
         {
-			decryption(bot, message);
+	    decryption(bot, message);
             return;
         }    
-		else if (waitKey && waitNextMessage && !StringTools::startsWith(message->text, "/key"))
-		{
-			saveKey(bot, message);
-			return;
-		}	
+	else if (waitKey && waitNextMessage && !StringTools::startsWith(message->text, "/key"))
+	{
+	    saveKey(bot, message);
+	    return;
+        }	
     }
 }
 
