@@ -212,8 +212,14 @@ void onAnyMessage(Bot& bot, Message::Ptr message)
         }
         else if (modeDecryption && !waitKey && waitNextMessage)
         {
-	    decryption(bot, message);
-            return;
+	    try 
+            {
+                decryption(bot, message);
+            }
+            catch (...) 
+            {
+                bot.getApi().sendMessage(message->chat->id, "Wrong key!");
+            }
         }    
 	else if (waitKey && waitNextMessage && !StringTools::startsWith(message->text, "/key"))
 	{
